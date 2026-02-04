@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="cs">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Frontend – Zobrazení</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <header>
+      <div>
+        <h1>Frontend – Zobrazení písní</h1>
+        <p class="notice">Vyberte píseň a případně ji transponujte. Aktivní píseň se zobrazí zpěvákům.</p>
+      </div>
+      <nav>
+        <a href="/admin.html">Backend</a>
+        <a href="/singer.html">Zpěvák</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2>Seznam písní</h2>
+        <ul id="song-list" class="song-list"></ul>
+      </section>
+
+      <section class="card">
+        <h2 id="song-title">Nevybraná píseň</h2>
+        <div class="controls">
+          <button id="transpose-down" class="secondary">- půltón</button>
+          <button id="transpose-up">+ půltón</button>
+          <button id="set-now" class="secondary">Zobrazit zpěvákům</button>
+        </div>
+        <p class="notice">Transpozice se aplikuje jen na akordové řádky.</p>
+        <div id="song-display" class="song-display"></div>
+        <p id="status" class="notice"></p>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+    <script>
+      const list = document.getElementById('song-list');
+      const title = document.getElementById('song-title');
+      const display = document.getElementById('song-display');
+      const status = document.getElementById('status');
+      const transposeDown = document.getElementById('transpose-down');
+      const transposeUp = document.getElementById('transpose-up');
+      const setNow = document.getElementById('set-now');
+
+      let currentSong = null;
+      let transposeSteps = 0;
+
+      const renderSong = () => {
+        if (!currentSong) {
+          title.textContent = 'Nevybraná píseň';
+          display.textContent = '';
+          setNow.disabled = true;
+          return;
+        }
+        title.textContent = currentSong.title;
+        display.innerHTML = window.songApp.renderSongLines(currentSong.lines, transposeSteps);
+        setNow.disabled = false;
+      };
+
+      const loadSongs = async () => {
+        const data = await window.songApp.api.getSongs();
+        list.innerHTML = data.songs
+          .map(
+            (song) => `
+              <li>
+                <button data-id="${song.id}">${song.title}</button>
+              </li>
+            `
+          )
+          .join('');
+      };
+
+      list.addEventListener('click', async (event) => {
+        const button = event.target.closest('button[data-id]');
+        if (!button) return;
+        status.textContent = '';
+        transposeSteps = 0;
+        try {
+          const data = await window.songApp.api.getSong(button.dataset.id);
+          currentSong = data.song;
+          renderSong();
+        } catch (error) {
+          status.textContent = error.message;
+        }
+      });
+
+      transposeDown.addEventListener('click', () => {
+        if (!currentSong) return;
+        transposeSteps -= 1;
+        renderSong();
+      });
+
+      transposeUp.addEventListener('click', () => {
+        if (!currentSong) return;
+        transposeSteps += 1;
+        renderSong();
+      });
+
+      setNow.addEventListener('click', async () => {
+        if (!currentSong) return;
+        try {
+          await window.songApp.api.setNowPlaying(currentSong.id);
+          status.textContent = 'Píseň byla nastavena pro zpěváky.';
+        } catch (error) {
+          status.textContent = error.message;
+        }
+      });
+
+      loadSongs();
+    </script>
+  </body>
+</html>

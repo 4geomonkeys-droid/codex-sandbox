@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="cs">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Správa písní</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <header>
+      <div>
+        <h1>Backend – Správa písní</h1>
+        <p class="notice">Zadávejte střídající se řádky akordů a textu. Každý sudý řádek je text, lichý řádek jsou akordy.</p>
+      </div>
+      <nav>
+        <a href="/master.html">Frontend</a>
+        <a href="/singer.html">Zpěvák</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2>Nová píseň</h2>
+        <form id="song-form">
+          <label for="title">Název písně</label>
+          <input id="title" name="title" type="text" required />
+
+          <label for="content">Text s akordy</label>
+          <textarea id="content" name="content" required></textarea>
+
+          <div class="controls">
+            <button type="submit">Uložit píseň</button>
+            <button type="reset" class="secondary">Vymazat</button>
+          </div>
+        </form>
+        <p id="status" class="notice"></p>
+      </section>
+
+      <section class="card">
+        <h2>Aktuální seznam</h2>
+        <ul id="song-list" class="song-list"></ul>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+    <script>
+      const form = document.getElementById('song-form');
+      const status = document.getElementById('status');
+      const list = document.getElementById('song-list');
+
+      const renderList = (songs) => {
+        list.innerHTML = songs
+          .map((song) => `<li>${song.title}</li>`)
+          .join('');
+      };
+
+      const refresh = async () => {
+        try {
+          const data = await window.songApp.api.getSongs();
+          renderList(data.songs);
+        } catch (error) {
+          status.textContent = error.message;
+        }
+      };
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        status.textContent = '';
+        const formData = new FormData(form);
+        const payload = Object.fromEntries(formData.entries());
+        try {
+          await window.songApp.api.createSong(payload);
+          status.textContent = 'Píseň byla uložena.';
+          form.reset();
+          refresh();
+        } catch (error) {
+          status.textContent = error.message;
+        }
+      });
+
+      refresh();
+    </script>
+  </body>
+</html>

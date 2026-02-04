@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="cs">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Klient – Zpěvák</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <header>
+      <div>
+        <h1>Klient pro zpěváky</h1>
+        <p class="notice">Zobrazuje píseň vybranou na master zařízení.</p>
+      </div>
+      <nav>
+        <a href="/master.html">Frontend</a>
+        <a href="/admin.html">Backend</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2 id="song-title">Žádná píseň není vybraná</h2>
+        <p class="notice">Aktualizace každé 3 sekundy.</p>
+        <div id="song-display" class="song-display"></div>
+        <p id="status" class="notice"></p>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+    <script>
+      const title = document.getElementById('song-title');
+      const display = document.getElementById('song-display');
+      const status = document.getElementById('status');
+
+      const renderSong = (song) => {
+        if (!song) {
+          title.textContent = 'Žádná píseň není vybraná';
+          display.textContent = '';
+          return;
+        }
+        title.textContent = song.title;
+        display.innerHTML = window.songApp.renderSongLines(song.lines, 0);
+      };
+
+      const refresh = async () => {
+        try {
+          const data = await window.songApp.api.getNowPlaying();
+          renderSong(data.song);
+          status.textContent = data.song ? 'Synchronizováno.' : 'Čekám na výběr písně.';
+        } catch (error) {
+          status.textContent = error.message;
+        }
+      };
+
+      refresh();
+      setInterval(refresh, 3000);
+    </script>
+  </body>
+</html>
