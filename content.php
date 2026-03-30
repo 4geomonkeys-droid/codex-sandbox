@@ -93,5 +93,7 @@ return [
         'assets/img/logo-client-05.png',
         'assets/img/logo-client-06.png',
         'assets/img/logo-client-07.png',
+        'assets/img/logo-client-08.png',
+        'assets/img/logo-client-09.png',
     ],
 ];

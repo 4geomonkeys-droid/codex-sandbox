@@ -6,7 +6,7 @@
 3. Doplňte obrázky:
    - hlavní logo: `assets/img/logo.png`
    - fotky z akcí: nahrajte je do `assets/img/gallery/`
-   - loga referencí: nahrajte je do `assets/img/logos/`
+   - loga referencí (aktuálně 9): nahrajte je do `assets/img/logos/`
 4. Galerie i loga se načítají automaticky podle toho, co v těchto složkách najdou (názvy souborů mohou být libovolné).
 5. Hotovo.
 
