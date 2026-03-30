@@ -23,14 +23,6 @@ foreach ($logoFiles as $file) {
     $logoImages[] = 'assets/img/logos/' . basename($file);
 }
 
-if ($galleryImages === []) {
-    $galleryImages = $content['gallery'];
-}
-
-if ($logoImages === []) {
-    $logoImages = $content['logos'];
-}
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = trim((string) ($_POST['name'] ?? ''));
     $email = trim((string) ($_POST['email'] ?? ''));
@@ -129,11 +121,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="container">
             <h2>Galerie z akcí</h2>
             <div class="gallery">
-                <?php foreach ($galleryImages as $index => $image): ?>
-                    <figure class="gallery__item">
-                        <img src="<?= file_exists(__DIR__ . '/' . $image) ? htmlspecialchars($image) : 'assets/img/placeholder.svg' ?>" alt="SAMOFOT galerie <?= $index + 1 ?>" loading="lazy">
-                    </figure>
-                <?php endforeach; ?>
+                <?php if ($galleryImages === []): ?>
+                    <p>Do složky <code>assets/img/gallery/</code> zatím nebyly nahrány žádné fotografie.</p>
+                <?php else: ?>
+                    <?php foreach ($galleryImages as $index => $image): ?>
+                        <figure class="gallery__item">
+                            <img src="<?= htmlspecialchars($image) ?>" alt="SAMOFOT galerie <?= $index + 1 ?>" loading="lazy">
+                        </figure>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </div>
         </div>
     </section>
@@ -153,11 +149,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="container">
             <h2>Firmy, které si SAMOFOT vybraly</h2>
             <div class="logos">
-                <?php foreach ($logoImages as $index => $logo): ?>
-                    <div class="logos__item">
-                        <img src="<?= file_exists(__DIR__ . '/' . $logo) ? htmlspecialchars($logo) : 'assets/img/placeholder.svg' ?>" alt="Reference logo <?= $index + 1 ?>" loading="lazy">
-                    </div>
-                <?php endforeach; ?>
+                <?php if ($logoImages === []): ?>
+                    <p>Do složky <code>assets/img/logos/</code> zatím nebyla nahrána žádná loga referencí.</p>
+                <?php else: ?>
+                    <?php foreach ($logoImages as $index => $logo): ?>
+                        <div class="logos__item">
+                            <img src="<?= htmlspecialchars($logo) ?>" alt="Reference logo <?= $index + 1 ?>" loading="lazy">
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </div>
         </div>
     </section>

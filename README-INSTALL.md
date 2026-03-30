@@ -6,8 +6,10 @@
 3. Doplňte obrázky:
    - hlavní logo: `assets/img/logo.png`
    - fotky z akcí: nahrajte je do `assets/img/gallery/`
-   - loga referencí (aktuálně 9): nahrajte je do `assets/img/logos/`
+   - loga referencí: nahrajte je do `assets/img/logos/`
 4. Galerie i loga se načítají automaticky podle toho, co v těchto složkách najdou (názvy souborů mohou být libovolné).
+   - počet zobrazených fotek = počet souborů v `assets/img/gallery/`
+   - počet zobrazených log = počet souborů v `assets/img/logos/`
 5. Hotovo.
 
 ## Jak upravovat obsah
