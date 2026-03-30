@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-label="Placeholder">
+  <rect width="1200" height="800" fill="#e7e9f2"/>
+  <rect x="40" y="40" width="1120" height="720" fill="none" stroke="#b7bdd0" stroke-width="6" stroke-dasharray="14 10"/>
+  <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#6f7894" font-family="Arial, sans-serif" font-size="42">Nahrajte vlastní fotografii/logo</text>
+</svg>
